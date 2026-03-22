@@ -24,6 +24,7 @@ export default function DatasetFinder() {
   const [searched, setSearched]         = useState("");
   const [showFactorInfo, setShowFactor] = useState(false);
   const [rateInfo, setRateInfo]         = useState(null); // { remaining, used, max }
+  const [searchMode, setSearchMode]     = useState(null); // "live" or "fallback"
 
   // Fetch rate limit info on mount
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function DatasetFinder() {
 
       setResults(data.datasets);
       setRateInfo({ remaining: data.remaining, used: data.used, max: data.max });
+      setSearchMode(data.mode || "live");
     } catch (err) {
       setError("Network error. Please check your connection.");
     } finally {
@@ -199,6 +201,7 @@ export default function DatasetFinder() {
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22, flexWrap: "wrap" }}>
               <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, color: "#6b7a9a", letterSpacing: 2 }}>TOP 3 DATASETS FOR</span>
               <span style={{ padding: "3px 12px", background: "rgba(59,130,246,0.15)", border: "1px solid #3b82f6", borderRadius: 20, fontSize: 12, color: "#6fa3ef", fontWeight: 700 }}>"{searched}"</span>
+
               {rateInfo && (
                 <span style={{ marginLeft: "auto", fontSize: 11, color: pillColor, fontFamily: "'Space Mono',monospace" }}>{rateInfo.remaining} searches left today</span>
               )}
