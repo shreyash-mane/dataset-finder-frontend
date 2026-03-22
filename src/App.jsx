@@ -91,7 +91,7 @@ export default function DatasetFinder() {
   const pillColor  = remaining > 2 ? "#00E5A0" : remaining > 0 ? "#FFB800" : "#FF5A5A";
 
   return (
-    <div style={{ minHeight: "100vh", background: "#050b1a", color: "#e0e8ff", fontFamily: "'Syne', sans-serif" }}>
+    <div style={{ minHeight: "100vh", maxWidth: "100vw", overflowX: "hidden", background: "#050b1a", color: "#e0e8ff", fontFamily: "'Syne', sans-serif" }}>
       <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
       <div style={{ position: "fixed", inset: 0, backgroundImage: "linear-gradient(rgba(30,58,138,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.07) 1px,transparent 1px)", backgroundSize: "40px 40px", pointerEvents: "none" }} />
 
