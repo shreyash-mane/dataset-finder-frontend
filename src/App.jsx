@@ -13,6 +13,8 @@ const FACTOR_META = {
   biasAndDiversity:  { label: "Bias & Diversity",   icon: "⚖",  desc: "How representative, balanced and free from demographic bias the data is" },
 };
 
+const MAX_SEARCHES_PER_DAY = 5;
+
 export default function DatasetFinder() {
   const [query, setQuery]               = useState("");
   const [results, setResults]           = useState(null);
@@ -87,7 +89,6 @@ export default function DatasetFinder() {
   // Search count pill colours
   const remaining  = rateInfo?.remaining ?? MAX_SEARCHES_PER_DAY;
   const pillColor  = remaining > 2 ? "#00E5A0" : remaining > 0 ? "#FFB800" : "#FF5A5A";
-  const MAX_SEARCHES_PER_DAY = 5;
 
   return (
     <div style={{ minHeight: "100vh", background: "#050b1a", color: "#e0e8ff", fontFamily: "'Syne', sans-serif" }}>
