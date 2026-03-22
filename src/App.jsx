@@ -91,11 +91,27 @@ export default function DatasetFinder() {
   const pillColor  = remaining > 2 ? "#00E5A0" : remaining > 0 ? "#FFB800" : "#FF5A5A";
 
   return (
-    <div style={{ minHeight: "100vh", maxWidth: "100vw", overflowX: "hidden", background: "#050b1a", color: "#e0e8ff", fontFamily: "'Syne', sans-serif" }}>
+    <div style={{ minHeight: "100vh", width: "100%", maxWidth: "100%", overflowX: "hidden", background: "#050b1a", color: "#e0e8ff", fontFamily: "'Syne', sans-serif", boxSizing: "border-box" }}>
+      <style>{`
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; overflow-x: hidden; }
+        @media (max-width: 600px) {
+          .main-container { padding: 30px 16px 60px !important; }
+          .search-bar { flex-direction: column !important; }
+          .search-btn { width: 100% !important; }
+          .stats-row { gap: 6px !important; }
+          .score-box { min-width: 120px !important; }
+          .factor-grid { grid-template-columns: 1fr !important; }
+          .rank-title { font-size: 15px !important; }
+        }
+        @media (max-width: 900px) {
+          .card-body { flex-direction: column !important; }
+        }
+      `}</style>
       <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
       <div style={{ position: "fixed", inset: 0, backgroundImage: "linear-gradient(rgba(30,58,138,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.07) 1px,transparent 1px)", backgroundSize: "40px 40px", pointerEvents: "none" }} />
 
-      <div style={{ position: "relative", maxWidth: 900, margin: "0 auto", padding: "50px 20px 80px" }}>
+      <div style={{ position: "relative", maxWidth: 900, width: "100%", margin: "0 auto", padding: "50px 20px 80px", className: "main-container" }}>
 
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 44 }}>
@@ -139,7 +155,7 @@ export default function DatasetFinder() {
         </div>
 
         {/* Search bar */}
-        <div style={{ maxWidth: 680, margin: "0 auto 46px", display: "flex", gap: 10 }}>
+        <div style={{ maxWidth: 680, width: "100%", margin: "0 auto 46px", display: "flex", gap: 10, flexWrap: "wrap" }}>
           <div style={{ flex: 1, position: "relative" }}>
             <input value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={handleKey}
               placeholder="e.g. medical imaging, sentiment analysis, climate data..."
@@ -150,7 +166,7 @@ export default function DatasetFinder() {
             <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", fontSize: 17, opacity: 0.4 }}>⌕</span>
           </div>
           <button onClick={searchDatasets} disabled={loading || !query.trim() || rateInfo?.remaining === 0}
-            style={{ padding: "14px 22px", background: (loading || rateInfo?.remaining === 0) ? "#1e3a8a" : "linear-gradient(135deg,#1d4ed8,#3b82f6)", border: "none", borderRadius: 12, color: "#fff", fontSize: 14, fontWeight: 700, fontFamily: "'Syne',sans-serif", cursor: (loading || rateInfo?.remaining === 0) ? "not-allowed" : "pointer", whiteSpace: "nowrap", opacity: rateInfo?.remaining === 0 ? 0.5 : 1 }}>
+            style={{ padding: "14px 22px", background: (loading || rateInfo?.remaining === 0) ? "#1e3a8a" : "linear-gradient(135deg,#1d4ed8,#3b82f6)", border: "none", borderRadius: 12, color: "#fff", fontSize: 14, fontWeight: 700, fontFamily: "'Syne',sans-serif", cursor: (loading || rateInfo?.remaining === 0) ? "not-allowed" : "pointer", whiteSpace: "nowrap", opacity: rateInfo?.remaining === 0 ? 0.5 : 1, flexShrink: 0 }}>
             {loading ? "Searching..." : "Search →"}
           </button>
         </div>
@@ -204,7 +220,7 @@ export default function DatasetFinder() {
                     </div>
 
                     <div style={{ padding: "16px 20px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap", alignItems: "flex-start" }}>
                         <div style={{ flex: 1, minWidth: 180 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
                             <h2 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: "#e0e8ff" }}>{ds.name}</h2>
@@ -247,7 +263,7 @@ export default function DatasetFinder() {
                       <div style={{ borderTop: "1px solid #0d1b3e", padding: "18px 20px", background: "rgba(4,9,22,0.7)" }}>
 
                         <h3 style={{ margin: "0 0 11px", fontSize: 11, fontFamily: "'Space Mono',monospace", color: "#6fa3ef", letterSpacing: 2 }}>📊 RELIABILITY FACTOR BREAKDOWN (/10)</h3>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 7, marginBottom: 18 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 7, marginBottom: 18 }}>
                           {Object.entries(FACTOR_META).map(([key, meta]) => {
                             const val = (ds.reliabilityFactors || {})[key] || 0;
                             return (
