@@ -210,7 +210,7 @@ function SearchPage({ user, setPage }) {
           Find the Right Dataset.<br />Backed by Science.
         </h1>
         <p style={{ color:"#6b7a9a", fontSize:13, maxWidth:480, margin:"0 auto 12px", lineHeight:1.7 }}>
-          Search any topic — supports <strong style={{ color:"#6fa3ef" }}>AND/OR</strong> queries like "mental health AND suicidal". Scored across <strong style={{ color:"#6fa3ef" }}>7 reliability factors</strong>.
+          Search any topic and get the top 3 most relevant datasets — ranked by reliability, citations, and real-world research usage.
           {!user && <span> <span onClick={() => setPage("register")} style={{ color:"#3b82f6", cursor:"pointer", textDecoration:"underline" }}>Sign up</span> to save datasets!</span>}
         </p>
         <button onClick={() => setShowFactor(!showFactor)} style={{ background:"none", border:"1px solid #1e3a8a", borderRadius:20, padding:"4px 12px", color:"#6fa3ef", fontSize:11, fontFamily:"'Space Mono',monospace", cursor:"pointer" }}>
