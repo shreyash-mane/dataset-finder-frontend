@@ -122,6 +122,8 @@ function SearchPage({ user, setPage }) {
   const [collections, setCols]      = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const [queryType, setQueryType]   = useState(null);
+  const [searchMode, setSearchMode] = useState(null); // fast | live | cached
+  const [fromCache, setFromCache]   = useState(false);
 
   // Filters
   const [sortBy, setSortBy]         = useState("reliability"); // reliability | year | size
@@ -134,15 +136,17 @@ function SearchPage({ user, setPage }) {
     if (user) apiFetch("/api/collections").then(r => r.json()).then(d => Array.isArray(d) ? setCols(d) : setCols([])).catch(()=>{});
   }, [user]);
 
-  const search = async () => {
+  const search = async (liveSearch = false) => {
     if (!query.trim() || loading) return;
-    setLoading(true); setError(null); setResults(null); setSearched(query); setExpanded(null); setQueryType(null);
+    setLoading(true); setError(null); setResults(null); setSearched(query); setExpanded(null); setQueryType(null); setSearchMode(null);
     try {
-      const res = await apiFetch("/api/search", { method:"POST", body:JSON.stringify({ query:query.trim() }) });
+      const res = await apiFetch("/api/search", { method:"POST", body:JSON.stringify({ query:query.trim(), liveSearch }) });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Search failed."); return; }
       setResults(data.datasets);
       setQueryType(data.queryType);
+      setSearchMode(data.mode);
+      setFromCache(data.fromCache || false);
       setRateInfo({ remaining:data.remaining, used:data.used, max:data.max });
     } catch { setError("Network error. Please check your connection."); }
     finally { setLoading(false); }
@@ -318,8 +322,8 @@ function SearchPage({ user, setPage }) {
       {loading && (
         <div style={{ textAlign:"center", padding:"60px 0" }}>
           <div style={{ display:"inline-block", width:42, height:42, border:"3px solid #1e3a8a", borderTopColor:"#3b82f6", borderRadius:"50%", animation:"spin 0.8s linear infinite" }} />
-          <p style={{ marginTop:14, color:"#6b7a9a", fontFamily:"'Space Mono',monospace", fontSize:11, letterSpacing:1 }}>🌐 LIVE SEARCHING FOR "{searched.toUpperCase()}"...</p>
-          <p style={{ color:"#3a4a6a", fontFamily:"'Space Mono',monospace", fontSize:10 }}>This may take 15–25 seconds</p>
+          <p style={{ marginTop:14, color:"#6b7a9a", fontFamily:"'Space Mono',monospace", fontSize:11, letterSpacing:1 }}>⚡ SEARCHING FOR "{searched.toUpperCase()}"...</p>
+          <p style={{ color:"#3a4a6a", fontFamily:"'Space Mono',monospace", fontSize:10 }}>Usually takes 2–5 seconds</p>
           <style>{`@keyframes spin { to { transform:rotate(360deg); } }`}</style>
         </div>
       )}
@@ -336,6 +340,19 @@ function SearchPage({ user, setPage }) {
             {filteredResults.length < (results?.length||0) && (
               <span style={{ fontSize:11, color:"#FFB800", fontFamily:"'Space Mono',monospace" }}>{filteredResults.length} of {results?.length} shown</span>
             )}
+            {searchMode === "cached" && (
+              <span style={{ padding:"3px 9px", background:"rgba(255,184,0,0.1)", border:"1px solid #FFB80044", borderRadius:20, fontSize:10, color:"#FFB800", fontFamily:"'Space Mono',monospace" }}>⚡ CACHED</span>
+            )}
+            {searchMode === "fast" && (
+              <span style={{ padding:"3px 9px", background:"rgba(0,229,160,0.1)", border:"1px solid #00E5A044", borderRadius:20, fontSize:10, color:"#00E5A0", fontFamily:"'Space Mono',monospace" }}>⚡ FAST</span>
+            )}
+            {searchMode === "live" && (
+              <span style={{ padding:"3px 9px", background:"rgba(59,130,246,0.1)", border:"1px solid #3b82f644", borderRadius:20, fontSize:10, color:"#6fa3ef", fontFamily:"'Space Mono',monospace" }}>🌐 LIVE</span>
+            )}
+            <button onClick={() => search(true)} disabled={loading}
+              style={{ marginLeft:"auto", padding:"4px 12px", background:"rgba(30,58,138,0.3)", border:"1px solid #1e3a8a", borderRadius:20, color:"#6fa3ef", fontSize:11, cursor:"pointer", fontFamily:"'Space Mono',monospace" }}>
+              🌐 Get Latest Data
+            </button>
           </div>
 
           {filteredResults.length === 0 ? (
