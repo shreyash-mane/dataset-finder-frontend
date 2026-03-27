@@ -148,7 +148,7 @@ function SearchPage({ user, setPage }) {
       setSearchMode(data.mode);
       setFromCache(data.fromCache || false);
       setRateInfo({ remaining:data.remaining, used:data.used, max:data.max });
-    } catch { setError("Network error. Please check your connection."); }
+    } catch (err) { setError("Error: " + err.message); }
     finally { setLoading(false); }
   };
 
