@@ -140,7 +140,7 @@ function SearchPage({ user, setPage }) {
     if (!query.trim() || loading) return;
     setLoading(true); setError(null); setResults(null); setSearched(query); setExpanded(null); setQueryType(null); setSearchMode(null);
     try {
-      const res = await apiFetch("/api/search", { method:"POST", body:JSON.stringify({ query:query.trim(), liveSearch }) });
+      const res = await apiFetch("/api/search", { method:"POST", body:JSON.stringify({ query:query.trim(), liveSearch: liveSearch === true }) });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Search failed."); return; }
       setResults(data.datasets);
