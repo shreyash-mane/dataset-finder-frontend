@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:3001";
+const API_BASE = "https://dataset-finder-backend-production.up.railway.app";
 const MAX_SEARCHES_PER_DAY = 5;
 
 const FACTOR_META = {
